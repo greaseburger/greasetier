@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Tier = {
+export type Tier = {
   name: string;
   items: string[];
 };
@@ -10,6 +10,8 @@ interface TierStore {
   addToTier: (tierName: string, item: string) => void;
   removeFromTier: (tierName: string, item: string) => void;
   moveItem: (fromTier: string, toTier: string, item: string) => void;
+  addTier: (tierName: string) => void;
+  removeTier: (tierName: string) => void;
 }
 
 export const useTierStore = create<TierStore>((set) => ({
@@ -51,6 +53,16 @@ export const useTierStore = create<TierStore>((set) => ({
         }
         return tier;
       }),
+    }));
+  },
+  addTier: (tierName) => {
+    set((state) => ({
+      tiers: [...state.tiers, { name: tierName, items: [] }],
+    }));
+  },
+  removeTier: (tierName) => {
+    set((state) => ({
+      tiers: state.tiers.filter((tier) => tier.name !== tierName),
     }));
   },
 }));

@@ -2,12 +2,16 @@
 
 import { useTierStore } from "@/store/useTierStore";
 import { useState } from "react";
+import { DndContext } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 
 export default function Home() {
   const tiers = useTierStore((state) => state.tiers);
   const addToTier = useTierStore((state) => state.addToTier);
   const removeFromTier = useTierStore((state) => state.removeFromTier);
   const moveItem = useTierStore((state) => state.moveItem);
+  const addTier = useTierStore((state) => state.addTier);
+  const removeTier = useTierStore((state) => state.removeTier);
 
   const add = (formData: FormData) => {
     const tierName = formData.get("tierName") as string;
@@ -48,6 +52,38 @@ export default function Home() {
     }
   };
 
+  const handleAddTier = (formData: FormData) => {
+    const tierName = formData.get("tierName") as string;
+    if (tierName) {
+      addTier(tierName);
+    }
+  };
+
+  const TierItem = ({ tierName, item }: { tierName: string; item: string }) => {
+    return (
+      <li
+        className="bg-green-500 border-black border p-5 text-lg cursor-pointer hover:bg-orange-500"
+        onClick={() => moveItemHandler(tierName, item)}
+      >
+        {item}
+      </li>
+    );
+  };
+
+  const TierRow = (props: { tierName: string; children: React.ReactNode }) => {
+    return (
+      <div
+        onClick={() => handleMoveTo(props.tierName)}
+        className="m-4 p-2 bg-blue-500 flex flex-row"
+      >
+        <h2 className="text-xl font-bold p-5 bg-yellow-500">
+          {props.tierName}
+        </h2>
+        <ul className="flex flex-row w-full">{props.children}</ul>
+      </div>
+    );
+  };
+
   return (
     <>
       <div>
@@ -57,25 +93,34 @@ export default function Home() {
       <h1>IS MOVING: {isMoving.toString()}</h1>
 
       {tiers.map((tier) => (
-        <div
-          onClick={() => handleMoveTo(tier.name)}
-          key={tier.name}
-          className="m-4 p-2 bg-blue-500 flex flex-row"
-        >
-          <h2 className="text-xl font-bold p-5 bg-yellow-500">{tier.name}</h2>
-          <ul className=" bg-green-500 flex flex-row">
-            {tier.items.map((item) => (
-              <li
-                key={item}
-                className="border-black border p-5 text-lg cursor-pointer hover:bg-orange-500"
-                onClick={() => moveItemHandler(tier.name, item)}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TierRow key={tier.name} tierName={tier.name}>
+          {tier.items.map((item) => (
+            <TierItem key={item} tierName={tier.name} item={item} />
+          ))}
+          <li
+            className="bg-red-500 border-black border p-5 text-lg cursor-pointer hover:bg-orange-500 ml-auto"
+            onClick={() => removeTier(tier.name)}
+          >
+            -
+          </li>
+        </TierRow>
       ))}
+      <div className="m-4 p-2 bg-blue-700 flex flex-row">
+        <form action={handleAddTier} className="flex flex-row gap-2">
+          <button
+            type="submit"
+            className="text-xl font-bold p-5 bg-yellow-700 hover:bg-orange-700 cursor-pointer"
+          >
+            +
+          </button>
+          <input
+            type="text"
+            name="tierName"
+            id="tierName"
+            className="bg-green-700 h-full text-xl p-1"
+          />
+        </form>
+      </div>
 
       <form action={add} className="m-4">
         <input type="text" name="item" placeholder="Item Name" />
