@@ -1,65 +1,105 @@
-import Image from "next/image";
+"use client";
+
+import { useTierStore } from "@/store/useTierStore";
+import { useState } from "react";
 
 export default function Home() {
+  const tiers = useTierStore((state) => state.tiers);
+  const addToTier = useTierStore((state) => state.addToTier);
+  const removeFromTier = useTierStore((state) => state.removeFromTier);
+  const moveItem = useTierStore((state) => state.moveItem);
+
+  const add = (formData: FormData) => {
+    const tierName = formData.get("tierName") as string;
+    const item = formData.get("item") as string;
+
+    console.log("Adding item:", item, "to tier:", tierName);
+    if (item && tierName) {
+      addToTier(tierName, item);
+    }
+  };
+
+  const remove = (formData: FormData) => {
+    const tierName = formData.get("tierName") as string;
+    const item = formData.get("item") as string;
+
+    console.log("Removing item:", item, "from tier:", tierName);
+    if (item && tierName) {
+      removeFromTier(tierName, item);
+    }
+  };
+
+  const [isMoving, setisMoving] = useState(false);
+  const [oldTier, setOldTier] = useState<string | null>(null);
+  const [movingItem, setMovingItem] = useState<string | null>(null);
+
+  const moveItemHandler = (oldTier: string, item: string) => {
+    setisMoving(true);
+    setOldTier(oldTier);
+    setMovingItem(item);
+  };
+
+  const handleMoveTo = (newTier: string) => {
+    if (isMoving) {
+      setisMoving(false);
+      if (oldTier && movingItem && oldTier !== newTier) {
+        moveItem(oldTier, newTier, movingItem);
+      }
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <div>
+        <h1>greasetier</h1>
+      </div>
+
+      <h1>IS MOVING: {isMoving.toString()}</h1>
+
+      {tiers.map((tier) => (
+        <div
+          onClick={() => handleMoveTo(tier.name)}
+          key={tier.name}
+          className="m-4 p-2 bg-blue-500 flex flex-row"
+        >
+          <h2 className="text-xl font-bold p-5 bg-yellow-500">{tier.name}</h2>
+          <ul className=" bg-green-500 flex flex-row">
+            {tier.items.map((item) => (
+              <li
+                key={item}
+                className="border-black border p-5 text-lg cursor-pointer hover:bg-orange-500"
+                onClick={() => moveItemHandler(tier.name, item)}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      ))}
+
+      <form action={add} className="m-4">
+        <input type="text" name="item" placeholder="Item Name" />
+        <select name="tierName">
+          {tiers.map((tier) => (
+            <option key={tier.name} value={tier.name}>
+              {tier.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit">Add Item to Tier</button>
+      </form>
+
+      <form action={remove}>
+        <input type="text" name="item" placeholder="Item Name to Remove" />
+        <select name="tierName">
+          {tiers.map((tier) => (
+            <option key={tier.name} value={tier.name}>
+              {tier.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit">Remove Item from Tier</button>
+      </form>
+    </>
   );
 }
