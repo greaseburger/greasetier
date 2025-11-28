@@ -26,6 +26,10 @@ export default function App() {
     tierC: [],
   });
 
+  useEffect(() => {
+    console.log("tiers was changed");
+  }, [tiers]);
+
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -77,46 +81,45 @@ export default function App() {
 
   function handleDragOver(event: DragOverEvent) {
     const { active, over } = event;
-    if (!over) return;
+    if (!over || active.id === over.id) return;
 
     const activeId = active.id as string;
     const overId = over.id as string;
 
     const fromTier = findContainer(activeId);
     const toTier = findContainer(overId);
-    console.log(toTier);
 
     if (!fromTier || !toTier) return;
     if (fromTier === toTier) return;
 
-    setTiers((prev) => {
-      const newTiers = { ...prev };
+    // setTiers((prev) => {
+    //   const newTiers = { ...prev };
 
-      const fromItems = [...newTiers[fromTier]];
-      const toItems = [...newTiers[toTier]];
+    //   const fromItems = [...newTiers[fromTier]];
+    //   const toItems = [...newTiers[toTier]];
 
-      //remove from og tier
-      fromItems.splice(fromItems.indexOf(activeId), 1);
-      //add to new tier
-      const overIndex = toItems.indexOf(overId);
+    //   //remove from og tier
+    //   fromItems.splice(fromItems.indexOf(activeId), 1);
+    //   //add to new tier
+    //   const overIndex = toItems.indexOf(overId);
 
-      if (overIndex === -1) {
-        //dropped to empty tier
-        toItems.push(activeId);
-      } else {
-        toItems.splice(overIndex, 0, activeId);
-      }
+    //   if (overIndex === -1) {
+    //     //dropped to empty tier
+    //     toItems.push(activeId);
+    //   } else {
+    //     toItems.splice(overIndex, 0, activeId);
+    //   }
 
-      newTiers[fromTier] = fromItems;
-      newTiers[toTier] = toItems;
+    //   newTiers[fromTier] = fromItems;
+    //   newTiers[toTier] = toItems;
 
-      return newTiers;
-    });
+    //   return newTiers;
+    // });
   }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    if (!over) return;
+    if (!over || active.id === over.id) return;
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -125,20 +128,47 @@ export default function App() {
     const toTier = findContainer(overId);
 
     if (!fromTier || !toTier) return;
-    if (fromTier !== toTier) return;
+    // if (fromTier !== toTier) return;
 
-    setTiers((prev) => {
-      const newTiers = { ...prev };
-      const items = [...newTiers[fromTier]];
+    if (fromTier === toTier) {
+      setTiers((prev) => {
+        const newTiers = { ...prev };
+        const items = [...newTiers[fromTier]];
 
-      const oldIndex = items.indexOf(activeId);
-      const newIndex = items.indexOf(overId);
+        const oldIndex = items.indexOf(activeId);
+        const newIndex = items.indexOf(overId);
 
-      newTiers[fromTier] = arrayMove(items, oldIndex, newIndex);
+        newTiers[fromTier] = arrayMove(items, oldIndex, newIndex);
 
-      return newTiers;
-    });
+        return newTiers;
+      });
+    } else if (fromTier !== toTier) {
+      // if (fromTier === toTier) return;
 
+      setTiers((prev) => {
+        const newTiers = { ...prev };
+
+        const fromItems = [...newTiers[fromTier]];
+        const toItems = [...newTiers[toTier]];
+
+        //remove from og tier
+        fromItems.splice(fromItems.indexOf(activeId), 1);
+        //add to new tier
+        const overIndex = toItems.indexOf(overId);
+
+        if (overIndex === -1) {
+          //dropped to empty tier
+          toItems.push(activeId);
+        } else {
+          toItems.splice(overIndex, 0, activeId);
+        }
+
+        newTiers[fromTier] = fromItems;
+        newTiers[toTier] = toItems;
+
+        return newTiers;
+      });
+    }
     setActiveId(null);
   }
 }
