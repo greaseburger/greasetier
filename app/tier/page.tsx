@@ -16,7 +16,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import { Item } from "./Item";
 
-import { TierRow } from "./Tier";
+import { TierRow } from "./TierRow";
 
 import { Tiers, Tier, TierItem } from "@/lib/types";
 
@@ -141,7 +141,6 @@ export default function App() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    console.log(over);
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -162,8 +161,6 @@ export default function App() {
 
           const oldIndex = items.findIndex((i) => i.id === activeId);
           const newIndex = items.findIndex((i) => i.id === overId);
-
-          if (oldIndex === -1 || newIndex === -1) return tier;
 
           const newItems = arrayMove(items, oldIndex, newIndex);
 
