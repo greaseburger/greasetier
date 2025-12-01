@@ -3,10 +3,11 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { Item } from "./Item";
+import { Tiers, Tier, TierItem } from "@/lib/types";
 
-export const SortableItem = (props: { id: string }) => {
+export const SortableItem = ({ item: item }: { item: TierItem }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.id });
+    useSortable({ id: item.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -31,7 +32,7 @@ export const SortableItem = (props: { id: string }) => {
   return (
     <Item
       ref={setNodeRef}
-      id={props.id}
+      item={item}
       style={style}
       {...attributes}
       {...listeners}
