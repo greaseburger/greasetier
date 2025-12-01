@@ -21,8 +21,11 @@ export const TierRow = ({ tier: tier }: { tier: Tier }) => {
     >
       <div
         ref={setNodeRef}
-        className="flex flex-row border border-white h-20 w-full"
+        className="flex flex-row border border-white  w-full h-32"
       >
+        {tier.name !== "tierless" ? (
+          <h2 className="bg-green-500 p-5">{tier.name}</h2>
+        ) : null}
         {tier.items.map((item) => (
           <SortableItem key={item.id} item={item} />
         ))}

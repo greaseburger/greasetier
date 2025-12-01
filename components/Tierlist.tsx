@@ -20,7 +20,7 @@ import { TierRow } from "./TierRow";
 import { useTierStore } from "@/store/useTierStore";
 
 export const Tierlist = () => {
-  const tiers = useTierStore.getState().tiersData;
+  const tiers = useTierStore((state) => state.tiersData);
   const sortItem = useTierStore.getState().sortItem;
   const moveItem = useTierStore.getState().moveItem;
   const findContainer = useTierStore.getState().findContainer;
@@ -62,10 +62,7 @@ export const Tierlist = () => {
         ))}
         <DragOverlay>
           {activeItem ? (
-            <TierCard
-              className=" p-5 bg-orange-700 opacity-70"
-              item={activeItem}
-            />
+            <TierCard className="opacity-70" item={activeItem} />
           ) : null}
         </DragOverlay>
       </div>

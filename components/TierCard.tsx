@@ -11,8 +11,8 @@ export const TierCard = forwardRef<HTMLDivElement, ItemProps>(
   ({ item, ...props }, ref) => {
     return (
       <div {...props} id={item.id} ref={ref}>
-        <h1>{item.name}</h1>
-        {/* <Image src={item.imgUrl} alt="image" width={100} height={100} /> */}
+        <Image src={item.imgUrl} alt="image" width={100} height={100} />
+        {/* <h1>{item.name}</h1> */}
       </div>
     );
   }

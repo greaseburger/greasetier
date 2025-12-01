@@ -21,7 +21,7 @@ export const SortableItem = ({ item: item }: { item: TierItem }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="m-2 p-5 bg-orange-500"
+      className="m-2 p-1 w-20"
     />
   );
 };
