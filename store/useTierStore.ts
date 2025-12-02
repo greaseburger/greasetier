@@ -32,6 +32,7 @@ const initialData = [
   },
   {
     id: "tier-2",
+    name: "tierB",
     items: [],
   },
   {

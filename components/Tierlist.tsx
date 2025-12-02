@@ -110,6 +110,7 @@ export const Tierlist = () => {
     const { active, over } = event;
     setActiveId(null);
 
+    console.log(over);
     if (!over || active.id === over.id) return;
 
     const activeId = active.id as string;
@@ -119,6 +120,7 @@ export const Tierlist = () => {
       if (isTier(activeId)) removeTier(activeId);
       if (isItem(activeId)) removeItem(activeId);
     }
+
     if (isTier(activeId) && isTier(overId)) {
       sortTiers(activeId, overId);
     }
@@ -126,6 +128,8 @@ export const Tierlist = () => {
     if (isItem(activeId)) {
       const fromTier = findContainer(activeId);
       const toTier = findContainer(overId);
+
+      console.log(fromTier, toTier);
 
       if (!fromTier || !toTier) return;
 

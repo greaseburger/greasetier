@@ -20,6 +20,7 @@ export interface JikanMangaImage {
 export interface JikanManga {
   mal_id: number;
   title: string;
+  title_english: string;
   images: JikanMangaImage;
 }
 
