@@ -19,7 +19,9 @@ const useDebounce = (value: string, delay = 400) => {
 export default function App() {
   const results = useMangaStore((state) => state.results);
   const searchManga = useMangaStore((state) => state.searchManga);
+  const itemIds = useTierStore((state) => state.itemIds);
   const addItem = useTierStore((state) => state.addItem);
+  const addTier = useTierStore((state) => state.addTier);
 
   const [value, setValue] = useState("berserk");
   const debounced = useDebounce(value, 400);
@@ -32,17 +34,37 @@ export default function App() {
 
   const handleAdd = (itemData: JikanManga, tierId: string) => {
     const item: TierItem = {
-      id: itemData.mal_id.toString(),
+      id: "item-" + itemData.mal_id.toString(),
       name: itemData.title,
       imgUrl: itemData.images.jpg.image_url,
     };
-    addItem(tierId, item);
+    if (!itemIds.includes(item.id)) addItem(tierId, item);
+  };
+
+  const handleAddTier = (formData: FormData) => {
+    const tierName = formData.get("tierName") as string;
+    if (tierName) {
+      addTier(tierName);
+    }
   };
 
   return (
     <div className="m-10">
       <Tierlist />
-
+      <form action={handleAddTier} className="m-4 flex flex-row gap-2">
+        <button
+          type="submit"
+          className="text-xl font-bold p-5 bg-yellow-700 hover:bg-orange-700 cursor-pointer"
+        >
+          +
+        </button>
+        <input
+          type="text"
+          name="tierName"
+          id="tierName"
+          className="bg-green-700 h-full text-xl p-1"
+        />
+      </form>
       <div>
         <h2>Results</h2>
         <input

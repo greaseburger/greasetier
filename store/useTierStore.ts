@@ -2,11 +2,14 @@ import { create } from "zustand";
 import { Tiers, Tier, TierItem } from "@/lib/types";
 import { arrayMove } from "@dnd-kit/sortable";
 import { persist } from "zustand/middleware";
+import { v4 as uuidv4 } from "uuid";
 
 interface TierStore {
   tiersData: Tiers;
+  itemIds: string[];
   setTiers: (tiers: Tiers) => void;
   findContainer: (id: string) => Tier | TierItem | undefined;
+  sortTiers: (activeId: string, overId: string) => void;
   sortItem: (tierId: string, activeId: string, overId: string) => void;
   moveItem: (
     tierId: string,
@@ -15,38 +18,28 @@ interface TierStore {
     overId: string
   ) => void;
   addItem: (tierId: string, item: TierItem) => void;
+  addTier: (tierName: string) => void;
+  updateTier: (tierId: string, tierName: string) => void;
 }
 
 const initialData = [
   {
     id: "tier-1",
     name: "tierA",
-    items: [
-      // { id: "1", name: "hej", imgUrl: "none" },
-      // { id: "2", name: "no", imgUrl: "none" },
-      // { id: "3", name: "ye", imgUrl: "none" },
-    ],
+    items: [],
   },
   {
     id: "tier-2",
     name: "tierB",
-    items: [
-      // { id: "4", name: "tet", imgUrl: "none" },
-      // { id: "5", name: "o", imgUrl: "none" },
-      // { id: "6", name: "mik", imgUrl: "none" },
-    ],
+    items: [],
   },
   {
     id: "tier-3",
     name: "tierC",
-    items: [
-      // { id: "7", name: "213", imgUrl: "none" },
-      // { id: "8", name: "5523", imgUrl: "none" },
-      // { id: "9", name: "67", imgUrl: "none" },
-    ],
+    items: [],
   },
   {
-    id: "no-tier",
+    id: "tierless",
     name: "tierless",
     items: [],
   },
@@ -56,6 +49,7 @@ export const useTierStore = create<TierStore>()(
   persist(
     (set, get) => ({
       tiersData: initialData,
+      itemIds: [],
 
       setTiers: (tiers) => set({ tiersData: tiers }),
 
@@ -65,6 +59,15 @@ export const useTierStore = create<TierStore>()(
           (tier) =>
             tier.items.find((item) => item.id === itemId) || tier.id === itemId
         );
+      },
+      sortTiers: (activeId, overId) => {
+        set((state) => {
+          const tiers = [...state.tiersData];
+          const oldIndex = tiers.findIndex((i) => i.id === activeId);
+          const newIndex = tiers.findIndex((i) => i.id === overId);
+          const newTiers = arrayMove(tiers, oldIndex, newIndex);
+          return { tiersData: newTiers };
+        });
       },
 
       sortItem: (tierId, activeId, overId) => {
@@ -119,11 +122,36 @@ export const useTierStore = create<TierStore>()(
       },
       addItem: (tierId, item) => {
         set((state) => ({
-          tiersData: state.tiersData.map((tier) =>
-            tier.id === tierId
-              ? { ...tier, items: [...tier.items, item] }
-              : tier
-          ),
+          tiersData: state.tiersData.map((tier) => {
+            if (tier.id === tierId) {
+              return { ...tier, items: [...tier.items, item] };
+            } else {
+              return tier;
+            }
+          }),
+          itemIds: [...state.itemIds, item.id],
+        }));
+      },
+      addTier: (tierName) => {
+        set((state) => {
+          const newTiers = [...state.tiersData];
+          newTiers.splice(newTiers.length - 1, 0, {
+            id: "tier-" + uuidv4(),
+            name: tierName,
+            items: [],
+          });
+          return { tiersData: newTiers };
+        });
+      },
+      updateTier: (tierId, tierName) => {
+        set((state) => ({
+          tiersData: state.tiersData.map((tier) => {
+            if (tier.id === tierId) {
+              return { ...tier, name: tierName };
+            } else {
+              return tier;
+            }
+          }),
         }));
       },
     }),
