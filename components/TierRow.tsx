@@ -38,6 +38,29 @@ export const TierRow = ({
 
   const updateTier = useTierStore((state) => state.updateTier);
 
+  if (tier.id === "tierless") {
+    return (
+      <SortableContext
+        items={tier.items.map((item) => item.id)}
+        strategy={horizontalListSortingStrategy}
+      >
+        <div
+          ref={(node) => {
+            setNodeRefDrop(node);
+          }}
+          style={style}
+          className={
+            "flex flex-row border border-white  w-full h-32 " + className
+          }
+        >
+          {tier.items.map((item) => (
+            <SortableItem key={item.id} item={item} />
+          ))}
+        </div>
+      </SortableContext>
+    );
+  }
+
   return (
     <SortableContext
       items={tier.items.map((item) => item.id)}

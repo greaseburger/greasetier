@@ -18,8 +18,10 @@ interface TierStore {
     overId: string
   ) => void;
   addItem: (tierId: string, item: TierItem) => void;
+  removeItem: (itemId: string) => void;
   addTier: (tierName: string) => void;
   updateTier: (tierId: string, tierName: string) => void;
+  removeTier: (tierId: string) => void;
 }
 
 const initialData = [
@@ -30,7 +32,6 @@ const initialData = [
   },
   {
     id: "tier-2",
-    name: "tierB",
     items: [],
   },
   {
@@ -132,6 +133,15 @@ export const useTierStore = create<TierStore>()(
           itemIds: [...state.itemIds, item.id],
         }));
       },
+      removeItem: (itemId) => {
+        set((state) => ({
+          tiersData: state.tiersData.map((tier) => ({
+            ...tier,
+            items: tier.items.filter((item) => item.id !== itemId),
+          })),
+          itemIds: state.itemIds.filter((id) => id !== itemId),
+        }));
+      },
       addTier: (tierName) => {
         set((state) => {
           const newTiers = [...state.tiersData];
@@ -153,6 +163,28 @@ export const useTierStore = create<TierStore>()(
             }
           }),
         }));
+      },
+      removeTier: (tierId) => {
+        set((state) => {
+          const removedTier = state.tiersData.find(
+            (tier) => tier.id === tierId
+          );
+          if (!removedTier) return state;
+
+          return {
+            tiersData: state.tiersData
+              .filter((tier) => tier.id !== tierId)
+              .map((tier) => {
+                if (tier.id === "tierless") {
+                  return {
+                    ...tier,
+                    items: [...tier.items, ...removedTier.items],
+                  };
+                }
+                return tier;
+              }),
+          };
+        });
       },
     }),
 

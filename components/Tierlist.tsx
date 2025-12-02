@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -22,6 +22,7 @@ import { TierCard } from "./TierCard";
 import { TierRow } from "./TierRow";
 
 import { useTierStore } from "@/store/useTierStore";
+import { Trashcan } from "./Trashcan";
 
 export const Tierlist = () => {
   const tiers = useTierStore((state) => state.tiersData);
@@ -29,6 +30,8 @@ export const Tierlist = () => {
   const moveItem = useTierStore.getState().moveItem;
   const sortTiers = useTierStore.getState().sortTiers;
   const findContainer = useTierStore.getState().findContainer;
+  const removeTier = useTierStore.getState().removeTier;
+  const removeItem = useTierStore.getState().removeItem;
 
   useEffect(() => {
     console.log("tiers was changed");
@@ -82,6 +85,7 @@ export const Tierlist = () => {
           {tiers.map((tier) => (
             <TierRow key={tier.id} tier={tier} />
           ))}
+          {activeId ? <Trashcan /> : null}
         </SortableContext>
         <DragOverlay>
           <Overlay />
@@ -104,14 +108,19 @@ export const Tierlist = () => {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
+    setActiveId(null);
+
     if (!over || active.id === over.id) return;
 
     const activeId = active.id as string;
     const overId = over.id as string;
 
+    if (overId === "trashcan") {
+      if (isTier(activeId)) removeTier(activeId);
+      if (isItem(activeId)) removeItem(activeId);
+    }
     if (isTier(activeId) && isTier(overId)) {
       sortTiers(activeId, overId);
-      return;
     }
 
     if (isItem(activeId)) {
@@ -128,6 +137,5 @@ export const Tierlist = () => {
         moveItem(fromTier.id, toTier.id, activeId, overId);
       }
     }
-    setActiveId(null);
   }
 };
