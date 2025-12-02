@@ -85,7 +85,7 @@ export default function App() {
               />
               <p>{result.title}</p>
               <button
-                onClick={() => handleAdd(result, "no-tier")}
+                onClick={() => handleAdd(result, "tierless")}
                 className="cursor-pointer"
               >
                 Add To Tierlist
