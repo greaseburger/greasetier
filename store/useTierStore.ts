@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 interface TierStore {
   tiersData: Tiers;
   itemIds: string[];
+  nextColorIndex: number;
   setTiers: (tiers: Tiers) => void;
   findContainer: (id: string) => Tier | TierItem | undefined;
   sortTiers: (activeId: string, overId: string) => void;
@@ -52,11 +53,21 @@ const initialData = [
   },
 ];
 
+const presetColors = [
+  "#9A3030",
+  "#9A5030",
+  "#9A8530",
+  "#409A30",
+  "#308F9A",
+  "#30439A",
+];
+
 export const useTierStore = create<TierStore>()(
   persist(
     (set, get) => ({
       tiersData: initialData,
       itemIds: [],
+      nextColorIndex: 0,
 
       setTiers: (tiers) => set({ tiersData: tiers }),
 
@@ -149,15 +160,19 @@ export const useTierStore = create<TierStore>()(
         }));
       },
       addTier: (tierName) => {
+        const colorIndex = get().nextColorIndex;
+        const newColorIndex =
+          colorIndex + 1 >= presetColors.length ? 0 : colorIndex + 1;
+
         set((state) => {
           const newTiers = [...state.tiersData];
           newTiers.splice(newTiers.length - 1, 0, {
             id: "tier-" + uuidv4(),
             name: tierName,
-            color: "#aabbcc",
+            color: presetColors[colorIndex],
             items: [],
           });
-          return { tiersData: newTiers };
+          return { tiersData: newTiers, nextColorIndex: newColorIndex };
         });
       },
       updateTier: (tierId, tierName) => {

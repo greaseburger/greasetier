@@ -77,14 +77,21 @@ export const Tierlist = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
         <SortableContext
           items={tiers.filter((t) => t.id !== "tierless").map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          {tiers.map((tier) => (
-            <TierRow key={tier.id} tier={tier} />
-          ))}
+          {tiers.map((tier, index) => {
+            let roundedClass = "";
+            if (index === 0) roundedClass = "rounded-t-xl";
+            if (index === tiers.length - 1) roundedClass = "rounded-b-xl";
+            if (tiers.length === 1) roundedClass = "rounded-xl";
+
+            return (
+              <TierRow key={tier.id} tier={tier} className={roundedClass} />
+            );
+          })}
           {activeId ? <Trashcan /> : null}
         </SortableContext>
         <DragOverlay>

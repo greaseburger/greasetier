@@ -8,10 +8,12 @@ export function TierLabel({
   id,
   name,
   color,
+  className,
 }: {
   id: string;
   name: string;
   color: string;
+  className: string | undefined;
 }) {
   const [settingsActive, setSettingsActive] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +36,9 @@ export function TierLabel({
 
   return (
     <div
-      className="w-32 relative flex justify-center"
+      className={
+        "w-32 relative flex justify-center rounded-tr-none " + className
+      }
       style={{ backgroundColor: color }}
     >
       <input

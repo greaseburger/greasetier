@@ -52,7 +52,12 @@ export const TierRow = ({
         }
       >
         {tier.name !== "tierless" ? (
-          <TierLabel id={tier.id} name={tier.name} color={tier.color} />
+          <TierLabel
+            id={tier.id}
+            name={tier.name}
+            color={tier.color}
+            className={className}
+          />
         ) : null}
         {tier.items.map((item) => (
           <SortableItem key={item.id} item={item} />
@@ -62,7 +67,10 @@ export const TierRow = ({
           <div
             {...attributes}
             {...listeners}
-            className="p-5 h-full bg-yellow-500 ml-auto text-3xl flex flex-col items-center justify-center cursor-grab"
+            className={
+              "p-5 h-full bg-yellow-500 ml-auto text-3xl flex flex-col items-center justify-center cursor-grab rounded-tl-none " +
+              className
+            }
           >
             <span className="pointer-events-none">=</span>
           </div>

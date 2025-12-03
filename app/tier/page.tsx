@@ -49,7 +49,7 @@ export default function App() {
   };
 
   return (
-    <div className="m-10">
+    <div className="m-10 mx-44">
       <Tierlist />
       <form action={handleAddTier} className="m-4 flex flex-row gap-2">
         <button

@@ -13,10 +13,9 @@ export const TierCard = forwardRef<HTMLDivElement, ItemProps>(
       <div {...props} id={item.id} ref={ref}>
         <div className="relative group">
           <Image src={item.imgUrl} alt="image" width={100} height={100} />
-          <div className="absolute left-0 top-full mt-1 hidden w-fit p-0.5 bg-white text-black rounded shadow-lg group-hover:block">
+          <div className="absolute left-0 top-full mt-1 opacity-0 w-fit p-0.5 bg-white text-black rounded shadow-lg group-hover:opacity-100 transition-opacity duration-200">
             {item.name}
           </div>
-          {/* <h1>{item.name}</h1> */}
         </div>
       </div>
     );
