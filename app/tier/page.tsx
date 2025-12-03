@@ -33,9 +33,12 @@ export default function App() {
   }, [debounced, searchManga]);
 
   const handleAdd = (itemData: JikanManga, tierId: string) => {
+    const title = itemData.title_english
+      ? itemData.title_english
+      : itemData.title;
     const item: TierItem = {
       id: "item-" + itemData.mal_id.toString(),
-      name: itemData.title_english,
+      name: title,
       imgUrl: itemData.images.jpg.image_url,
     };
     if (!itemIds.includes(item.id)) addItem(tierId, item);

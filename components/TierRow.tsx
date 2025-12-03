@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  horizontalListSortingStrategy,
+  rectSortingStrategy,
   SortableContext,
   useSortable,
 } from "@dnd-kit/sortable";
@@ -15,9 +15,11 @@ import { TierLabel } from "./TierLabel";
 export const TierRow = ({
   tier: tier,
   className,
+  addTier,
 }: {
   tier: Tier;
   className?: string;
+  addTier?: () => void;
 }) => {
   const { setNodeRef: setNodeRefDrop } = useDroppable({
     id: tier.id,
@@ -39,42 +41,50 @@ export const TierRow = ({
   return (
     <SortableContext
       items={tier.items.map((item) => item.id)}
-      strategy={horizontalListSortingStrategy}
+      strategy={rectSortingStrategy}
     >
       <div
         ref={(node) => {
-          setNodeRefDrop(node);
+          // setNodeRefDrop(node);
           setNodeRefSort(node);
         }}
         style={style}
-        className={
-          "flex flex-row border border-white  w-full h-32 " + className
-        }
+        className={`flex flex-row border border-white w-full min-h-32 ${className} ${
+          tier.id === "tierless" && "mt-5"
+        }`}
       >
-        {tier.name !== "tierless" ? (
+        {tier.id !== "tierless" ? (
           <TierLabel
             id={tier.id}
             name={tier.name}
             color={tier.color}
             className={className}
           />
-        ) : null}
-        {tier.items.map((item) => (
-          <SortableItem key={item.id} item={item} />
-        ))}
-
-        {tier.name !== "tierless" ? (
+        ) : (
+          <div
+            className={`${className} w-32 relative flex justify-center rounded-tr-none bg-green-500 rounded-br-none mt-0`}
+          >
+            <button onClick={addTier} className="text-4xl">
+              +
+            </button>
+          </div>
+        )}
+        <div ref={setNodeRefDrop} className="w-full flex flex-row flex-wrap ">
+          {tier.items.map((item) => (
+            <SortableItem key={item.id} item={item} />
+          ))}
+        </div>
+        {tier.id !== "tierless" ? (
           <div
             {...attributes}
             {...listeners}
-            className={
-              "p-5 h-full bg-yellow-500 ml-auto text-3xl flex flex-col items-center justify-center cursor-grab rounded-tl-none " +
-              className
-            }
+            className={`p-6 min-h-32 bg-yellow-500 w-1 ml-auto text-3xl flex flex-col items-center justify-center cursor-grab rounded-tl-none rounded-bl-none ${className}`}
           >
             <span className="pointer-events-none">=</span>
           </div>
-        ) : null}
+        ) : (
+          <div className="p-6"></div>
+        )}
       </div>
     </SortableContext>
   );

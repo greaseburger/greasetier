@@ -11,7 +11,7 @@ export const SortableItem = ({ item: item }: { item: TierItem }) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: `${transition ?? "transform 200ms ease"}`,
   };
 
   return (
@@ -21,7 +21,7 @@ export const SortableItem = ({ item: item }: { item: TierItem }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="m-2 p-1 w-20"
+      className="p-1"
     />
   );
 };

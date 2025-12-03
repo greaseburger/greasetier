@@ -85,7 +85,8 @@ export const Tierlist = () => {
           {tiers.map((tier, index) => {
             let roundedClass = "";
             if (index === 0) roundedClass = "rounded-t-xl";
-            if (index === tiers.length - 1) roundedClass = "rounded-b-xl";
+            if (index === tiers.length - 2) roundedClass = "rounded-b-xl ";
+            if (tier.id === "tierless") roundedClass = "rounded-xl";
             if (tiers.length === 1) roundedClass = "rounded-xl";
 
             return (

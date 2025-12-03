@@ -37,24 +37,27 @@ export function TierLabel({
   return (
     <div
       className={
-        "w-32 relative flex justify-center rounded-tr-none " + className
+        "w-32 relative flex justify-center rounded-tr-none rounded-br-none " +
+        className
       }
       style={{ backgroundColor: color }}
     >
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => updateTier(id, e.target.value)}
-        placeholder="tier name..."
-        className="p-1 w-full text-xl text-center focus:outline-none"
-      />
+      <>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => updateTier(id, e.target.value)}
+          placeholder="tier name..."
+          className="p-1 w-full text-xl text-center focus:outline-none"
+        />
 
-      <button
-        className="absolute left-0 bottom-0 m-1 cursor-pointer"
-        onClick={toggleSettings}
-      >
-        ⚙️
-      </button>
+        <button
+          className="absolute left-0 bottom-0 m-1 cursor-pointer"
+          onClick={toggleSettings}
+        >
+          ⚙️
+        </button>
+      </>
 
       {settingsActive && (
         <TierSettingsPopup
