@@ -62,14 +62,23 @@ export const TierRow = ({
           />
         ) : (
           <div
-            className={`${className} w-32 relative flex justify-center rounded-tr-none bg-green-500 rounded-br-none mt-0`}
+            className={`${className} w-32 group relative flex justify-center rounded-tr-none bg-green-500 rounded-br-none mt-0`}
           >
-            <button onClick={addTier} className="text-4xl">
+            <button
+              onClick={addTier}
+              className="text-4xl cursor-pointer size-full"
+            >
               +
             </button>
+            <div className="absolute left-0 -top-1 mt-1 opacity-0 w-fit p-0.5 bg-white text-black rounded shadow-lg group-hover:opacity-100 transition-opacity duration-200">
+              Add a tier
+            </div>
           </div>
         )}
-        <div ref={setNodeRefDrop} className="w-full flex flex-row flex-wrap ">
+        <div
+          ref={setNodeRefDrop}
+          className="w-full flex flex-row items-center flex-wrap "
+        >
           {tier.items.map((item) => (
             <SortableItem key={item.id} item={item} />
           ))}

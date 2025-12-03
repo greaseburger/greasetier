@@ -26,12 +26,15 @@ import { Trashcan } from "./Trashcan";
 
 export const Tierlist = () => {
   const tiers = useTierStore((state) => state.tiersData);
-  const sortItem = useTierStore.getState().sortItem;
-  const moveItem = useTierStore.getState().moveItem;
-  const sortTiers = useTierStore.getState().sortTiers;
-  const findContainer = useTierStore.getState().findContainer;
-  const removeTier = useTierStore.getState().removeTier;
-  const removeItem = useTierStore.getState().removeItem;
+  const {
+    addTier,
+    removeTier,
+    removeItem,
+    sortItem,
+    moveItem,
+    sortTiers,
+    findContainer,
+  } = useTierStore.getState();
 
   useEffect(() => {
     console.log("tiers was changed");
@@ -90,7 +93,12 @@ export const Tierlist = () => {
             if (tiers.length === 1) roundedClass = "rounded-xl";
 
             return (
-              <TierRow key={tier.id} tier={tier} className={roundedClass} />
+              <TierRow
+                key={tier.id}
+                tier={tier}
+                className={roundedClass}
+                addTier={handleAddTier}
+              />
             );
           })}
           {activeId ? <Trashcan /> : null}
@@ -101,6 +109,10 @@ export const Tierlist = () => {
       </div>
     </DndContext>
   );
+
+  function handleAddTier() {
+    addTier();
+  }
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;

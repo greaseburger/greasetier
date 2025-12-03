@@ -18,10 +18,10 @@ const useDebounce = (value: string, delay = 400) => {
 
 export default function App() {
   const results = useMangaStore((state) => state.results);
-  const searchManga = useMangaStore((state) => state.searchManga);
   const itemIds = useTierStore((state) => state.itemIds);
-  const addItem = useTierStore((state) => state.addItem);
-  const addTier = useTierStore((state) => state.addTier);
+
+  const { searchManga } = useMangaStore.getState();
+  const { addItem } = useTierStore.getState();
 
   const [value, setValue] = useState("berserk");
   const debounced = useDebounce(value, 400);
@@ -44,30 +44,9 @@ export default function App() {
     if (!itemIds.includes(item.id)) addItem(tierId, item);
   };
 
-  const handleAddTier = (formData: FormData) => {
-    const tierName = formData.get("tierName") as string;
-    if (tierName) {
-      addTier(tierName);
-    }
-  };
-
   return (
     <div className="m-10 mx-44">
       <Tierlist />
-      <form action={handleAddTier} className="m-4 flex flex-row gap-2">
-        <button
-          type="submit"
-          className="text-xl font-bold p-5 bg-yellow-700 hover:bg-orange-700 cursor-pointer"
-        >
-          +
-        </button>
-        <input
-          type="text"
-          name="tierName"
-          id="tierName"
-          className="bg-green-700 h-full text-xl p-1"
-        />
-      </form>
       <div>
         <h2>Results</h2>
         <input

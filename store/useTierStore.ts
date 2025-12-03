@@ -20,7 +20,7 @@ interface TierStore {
   ) => void;
   addItem: (tierId: string, item: TierItem) => void;
   removeItem: (itemId: string) => void;
-  addTier: (tierName: string) => void;
+  addTier: (tierName?: string) => void;
   updateTier: (tierId: string, tierName: string) => void;
   updateTierColor: (tierId: string, color: string) => void;
   removeTier: (tierId: string) => void;
@@ -163,12 +163,11 @@ export const useTierStore = create<TierStore>()(
         const colorIndex = get().nextColorIndex;
         const newColorIndex =
           colorIndex + 1 >= presetColors.length ? 0 : colorIndex + 1;
-
         set((state) => {
           const newTiers = [...state.tiersData];
           newTiers.splice(newTiers.length - 1, 0, {
             id: "tier-" + uuidv4(),
-            name: tierName,
+            name: tierName || "",
             color: presetColors[colorIndex],
             items: [],
           });
