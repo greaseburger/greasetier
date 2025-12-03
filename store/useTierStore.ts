@@ -21,6 +21,7 @@ interface TierStore {
   removeItem: (itemId: string) => void;
   addTier: (tierName: string) => void;
   updateTier: (tierId: string, tierName: string) => void;
+  updateTierColor: (tierId: string, color: string) => void;
   removeTier: (tierId: string) => void;
 }
 
@@ -28,21 +29,25 @@ const initialData = [
   {
     id: "tier-1",
     name: "tierA",
+    color: "#aabbcc",
     items: [],
   },
   {
     id: "tier-2",
     name: "tierB",
+    color: "#aabbcc",
     items: [],
   },
   {
     id: "tier-3",
     name: "tierC",
+    color: "#aabbcc",
     items: [],
   },
   {
     id: "tierless",
     name: "tierless",
+    color: "#aabbcc",
     items: [],
   },
 ];
@@ -149,6 +154,7 @@ export const useTierStore = create<TierStore>()(
           newTiers.splice(newTiers.length - 1, 0, {
             id: "tier-" + uuidv4(),
             name: tierName,
+            color: "#aabbcc",
             items: [],
           });
           return { tiersData: newTiers };
@@ -159,6 +165,17 @@ export const useTierStore = create<TierStore>()(
           tiersData: state.tiersData.map((tier) => {
             if (tier.id === tierId) {
               return { ...tier, name: tierName };
+            } else {
+              return tier;
+            }
+          }),
+        }));
+      },
+      updateTierColor: (tierId, color) => {
+        set((state) => ({
+          tiersData: state.tiersData.map((tier) => {
+            if (tier.id === tierId) {
+              return { ...tier, color: color };
             } else {
               return tier;
             }

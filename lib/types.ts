@@ -3,6 +3,7 @@ export type Tiers = Tier[];
 export interface Tier {
   id: string;
   name: string;
+  color: string;
   items: TierItem[];
 }
 export interface TierItem {

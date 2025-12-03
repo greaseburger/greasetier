@@ -10,7 +10,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { SortableItem } from "./SortableItem";
 import { useDroppable } from "@dnd-kit/core";
 import { Tier } from "@/lib/types";
-import { useTierStore } from "@/store/useTierStore";
+import { TierLabel } from "./TierLabel";
 
 export const TierRow = ({
   tier: tier,
@@ -36,8 +36,6 @@ export const TierRow = ({
     transition,
   };
 
-  const updateTier = useTierStore((state) => state.updateTier);
-
   return (
     <SortableContext
       items={tier.items.map((item) => item.id)}
@@ -54,13 +52,7 @@ export const TierRow = ({
         }
       >
         {tier.name !== "tierless" ? (
-          <input
-            type="text"
-            value={tier.name}
-            onChange={(e) => updateTier(tier.id, e.target.value)}
-            placeholder="tier name..."
-            className="bg-green-500 p-2 w-32 text-xl text-center"
-          />
+          <TierLabel id={tier.id} name={tier.name} color={tier.color} />
         ) : null}
         {tier.items.map((item) => (
           <SortableItem key={item.id} item={item} />

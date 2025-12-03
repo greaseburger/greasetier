@@ -79,11 +79,13 @@ export default function App() {
             <div key={result.mal_id} className="flex gap-2 flex-col w-100">
               <Image
                 src={result.images.jpg.image_url}
-                alt={result.title + " cover"}
+                alt={result.title_english + " cover"}
                 width={100}
                 height={100}
               />
-              <p>{result.title}</p>
+              <p>
+                {result.title_english ? result.title_english : result.title}
+              </p>
               <button
                 onClick={() => handleAdd(result, "tierless")}
                 className="cursor-pointer"

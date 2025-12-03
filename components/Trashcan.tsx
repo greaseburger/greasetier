@@ -10,8 +10,6 @@ export const Trashcan = () => {
     id: "trashcan",
   });
 
-  const updateTier = useTierStore((state) => state.updateTier);
-
   return (
     <div
       ref={(node) => {
