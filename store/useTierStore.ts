@@ -16,7 +16,7 @@ interface TierStore {
     tierId: string,
     toTierId: string,
     activeId: string,
-    overId: string
+    overId: string,
   ) => void;
   addItem: (tierId: string, item: TierItem) => void;
   removeItem: (itemId: string) => void;
@@ -27,24 +27,24 @@ interface TierStore {
 }
 
 const initialData = [
-  {
-    id: "tier-1",
-    name: "tierA",
-    color: "#aabbcc",
-    items: [],
-  },
-  {
-    id: "tier-2",
-    name: "tierB",
-    color: "#aabbcc",
-    items: [],
-  },
-  {
-    id: "tier-3",
-    name: "tierC",
-    color: "#aabbcc",
-    items: [],
-  },
+  // {
+  //   id: "tier-1",
+  //   name: "tierA",
+  //   color: "#aabbcc",
+  //   items: [],
+  // },
+  // {
+  //   id: "tier-2",
+  //   name: "tierB",
+  //   color: "#aabbcc",
+  //   items: [],
+  // },
+  // {
+  //   id: "tier-3",
+  //   name: "tierC",
+  //   color: "#aabbcc",
+  //   items: [],
+  // },
   {
     id: "tierless",
     name: "tierless",
@@ -75,7 +75,7 @@ export const useTierStore = create<TierStore>()(
         const tiers = get().tiersData;
         return tiers.find(
           (tier) =>
-            tier.items.find((item) => item.id === itemId) || tier.id === itemId
+            tier.items.find((item) => item.id === itemId) || tier.id === itemId,
         );
       },
       sortTiers: (activeId, overId) => {
@@ -199,7 +199,7 @@ export const useTierStore = create<TierStore>()(
       removeTier: (tierId) => {
         set((state) => {
           const removedTier = state.tiersData.find(
-            (tier) => tier.id === tierId
+            (tier) => tier.id === tierId,
           );
           if (!removedTier) return state;
 
@@ -220,6 +220,6 @@ export const useTierStore = create<TierStore>()(
       },
     }),
 
-    { name: "tierlist-storage" }
-  )
+    { name: "tierlist-storage" },
+  ),
 );

@@ -49,7 +49,7 @@ export const TierRow = ({
           setNodeRefSort(node);
         }}
         style={style}
-        className={`flex flex-row border border-white w-full min-h-32 ${className} ${
+        className={`flex min-h-32 w-full flex-row border border-white/20 ${className} ${
           tier.id === "tierless" && "mt-5"
         }`}
       >
@@ -62,22 +62,22 @@ export const TierRow = ({
           />
         ) : (
           <div
-            className={`${className} w-32 group relative flex justify-center rounded-tr-none bg-green-500 rounded-br-none mt-0`}
+            className={`${className} group relative mt-0 flex w-32 justify-center rounded-tr-none rounded-br-none bg-green-500`}
           >
             <button
               onClick={addTier}
-              className="text-4xl cursor-pointer size-full"
+              className="size-full cursor-pointer text-4xl"
             >
               +
             </button>
-            <div className="absolute left-0 -top-1 mt-1 opacity-0 w-fit p-0.5 bg-white text-black rounded shadow-lg group-hover:opacity-100 transition-opacity duration-200">
+            <div className="absolute -top-1 left-0 mt-1 w-fit rounded bg-white p-0.5 text-black opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
               Add a tier
             </div>
           </div>
         )}
         <div
           ref={setNodeRefDrop}
-          className="w-full flex flex-row items-center flex-wrap "
+          className="flex w-full flex-row flex-wrap items-center"
         >
           {tier.items.map((item) => (
             <SortableItem key={item.id} item={item} />
@@ -87,7 +87,7 @@ export const TierRow = ({
           <div
             {...attributes}
             {...listeners}
-            className={`p-6 min-h-32 bg-yellow-500 w-1 ml-auto text-3xl flex flex-col items-center justify-center cursor-grab rounded-tl-none rounded-bl-none ${className}`}
+            className={`ml-auto flex min-h-32 w-1 cursor-grab flex-col items-center justify-center rounded-tl-none rounded-bl-none bg-white/10 p-6 text-3xl ${className}`}
           >
             <span className="pointer-events-none">=</span>
           </div>

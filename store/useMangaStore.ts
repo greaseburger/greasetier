@@ -14,7 +14,7 @@ export const useMangaStore = create<MangaStore>((set) => ({
   searchManga: async (query: string) => {
     set({ loading: true });
     const res = await fetch(
-      `https://api.jikan.moe/v4/manga?q=${query}&sfw=true&limit=10&order_by=popularity`
+      `https://api.jikan.moe/v4/manga?q=${query}&sfw=true&limit=20&type=manga&order_by=popularity`,
     );
     const data = await res.json();
     set({ results: data.data ?? [], loading: false });

@@ -37,7 +37,7 @@ export function TierLabel({
   return (
     <div
       className={
-        "w-32 relative flex justify-center rounded-tr-none rounded-br-none " +
+        "relative flex w-32 justify-center rounded-tr-none rounded-br-none " +
         className
       }
       style={{ backgroundColor: color }}
@@ -48,11 +48,11 @@ export function TierLabel({
           value={name}
           onChange={(e) => updateTier(id, e.target.value)}
           placeholder="tier name..."
-          className="p-1 w-full text-xl text-center focus:outline-none"
+          className="w-full p-1 text-center text-lg focus:outline-none"
         />
 
         <button
-          className="absolute left-0 bottom-0 m-1 cursor-pointer"
+          className="absolute bottom-0 left-0 m-1 cursor-pointer"
           onClick={toggleSettings}
         >
           ⚙️

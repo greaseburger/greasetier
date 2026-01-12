@@ -51,7 +51,7 @@ export const Tierlist = () => {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const [isClient, setIsClient] = useState(false);
@@ -73,41 +73,52 @@ export const Tierlist = () => {
     return null;
   };
 
-  return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={rectIntersection}
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-    >
-      <div className="flex flex-col">
-        <SortableContext
-          items={tiers.filter((t) => t.id !== "tierless").map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {tiers.map((tier, index) => {
-            let roundedClass = "";
-            if (index === 0) roundedClass = "rounded-t-xl";
-            if (index === tiers.length - 2) roundedClass = "rounded-b-xl ";
-            if (tier.id === "tierless") roundedClass = "rounded-xl";
-            if (tiers.length === 1) roundedClass = "rounded-xl";
+  const Alert = () => {
+    if (tiers.length === 1) {
+      return <div>Tierlist is empty, add a tier to get started!</div>;
+    } else {
+      return null;
+    }
+  };
 
-            return (
-              <TierRow
-                key={tier.id}
-                tier={tier}
-                className={roundedClass}
-                addTier={handleAddTier}
-              />
-            );
-          })}
-          {activeId ? <Trashcan /> : null}
-        </SortableContext>
-        <DragOverlay>
-          <Overlay />
-        </DragOverlay>
-      </div>
-    </DndContext>
+  return (
+    <div className="m-10 w-3/4">
+      <Alert />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={rectIntersection}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+      >
+        <div className="flex flex-col">
+          <SortableContext
+            items={tiers.filter((t) => t.id !== "tierless").map((t) => t.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {tiers.map((tier, index) => {
+              let roundedClass = "";
+              if (index === 0) roundedClass = "rounded-t-xl";
+              if (index === tiers.length - 2) roundedClass = "rounded-b-xl ";
+              if (tier.id === "tierless") roundedClass = "rounded-xl";
+              if (tiers.length === 2) roundedClass = "rounded-xl";
+
+              return (
+                <TierRow
+                  key={tier.id}
+                  tier={tier}
+                  className={roundedClass}
+                  addTier={handleAddTier}
+                />
+              );
+            })}
+            <Trashcan active={activeId} />
+          </SortableContext>
+          <DragOverlay>
+            <Overlay />
+          </DragOverlay>
+        </div>
+      </DndContext>
+    </div>
   );
 
   function handleAddTier() {

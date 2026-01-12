@@ -45,35 +45,38 @@ export default function App() {
   };
 
   return (
-    <div className="m-10 mx-44">
+    <div className="flex flex-row">
       <Tierlist />
-      <div>
-        <h2>Results</h2>
+      <div className="flex h-dvh w-1/4 flex-col gap-2 overflow-y-scroll p-4">
+        <h2>Add items to the tierlist</h2>
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search manga..."
-          className="border p-1 mb-2"
+          className="mb-2 w-full rounded-sm border p-1 focus:outline-none"
         />
-        <div className="flex flex-col">
+        <div className="flex flex-row flex-wrap gap-3">
           {results.map((result) => (
-            <div key={result.mal_id} className="flex gap-2 flex-col w-100">
-              <Image
-                src={result.images.jpg.image_url}
-                alt={result.title_english + " cover"}
-                width={100}
-                height={100}
-              />
-              <p>
-                {result.title_english ? result.title_english : result.title}
-              </p>
-              <button
+            <div key={result.mal_id} className="">
+              <div
                 onClick={() => handleAdd(result, "tierless")}
-                className="cursor-pointer"
+                className="group relative size-fit cursor-pointer"
               >
-                Add To Tierlist
-              </button>
+                <div className="absolute size-full content-center bg-green-500/40 text-center text-6xl opacity-0 hover:opacity-100">
+                  +
+                </div>
+                <Image
+                  src={result.images.jpg.image_url}
+                  alt={result.title_english + " cover"}
+                  width={100}
+                  height={100}
+                  className="h-28 w-20 rounded-sm object-cover"
+                />
+                <div className="absolute top-full left-0 z-50 mt-1 hidden w-fit rounded bg-white p-0.5 text-black shadow-lg group-hover:block">
+                  {result.title_english ? result.title_english : result.title}
+                </div>
+              </div>
             </div>
           ))}
         </div>
